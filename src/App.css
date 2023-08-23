@@ -1,38 +1,282 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Bricolage Grotesque", sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: #4dabf7;
+  color: #fff;
+}
+
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  height: 100%;
+  width: 100vw;
+  margin-bottom: 2rem;
+  overflow: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.header {
+  font-size: 3.6rem;
+  margin-bottom: 6rem;
+  box-shadow: 0 0 2rem 1rem rgb(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100vw;
+  background-image: linear-gradient(to top, #4dabf7, #228be6);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.start-screen {
+  width: 80%;
+  height: 80vh;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.form-player-list {
+  width: 50%;
+  height: 70vh;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 0 2rem 1rem rgb(0, 0, 0, 0.1);
+  padding: 2rem;
+  border-radius: 1.2rem;
+  /* background-color: #fff; */
+  background-image: linear-gradient(to top, #4dabf7, #228be6);
+}
+
+.form-player-list-start {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  border-radius: 1.2rem;
+  max-height: 45vh;
 }
 
-.App-link {
-  color: #61dafb;
+.form-player-list span,
+.form-player-list-start span {
+  font-size: 2.4rem;
+  font-weight: 600;
+  padding: 1rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.form-add-player {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+::-webkit-scrollbar {
+  width: 0;
+}
+
+.add-player-heading {
+  font-size: 1.6rem;
+}
+
+.add-player-input {
+  width: 40%;
+  font-size: 2.4rem;
+  padding: 0.5rem;
+  border-radius: 1.2rem;
+  border: none;
+  text-align: center;
+}
+.btn-add-player,
+.btn-start {
+  padding: 1rem;
+  font-size: 2.4rem;
+  font-weight: 700;
+  width: 15%;
+  border-radius: 1.2rem;
+  border: none;
+  background-color: #fff;
+  color: #4dabf7;
+  font-family: "Bricolage Grotesque", sans-serif;
+  transition: all 0.2s ease;
+}
+
+.btn-add-player:hover,
+.btn-start:hover {
+  cursor: pointer;
+  background-color: #1864ab;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.player-card {
+  /* display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 2rem; */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  box-shadow: 0 0px 6px 0.1px rgb(0, 0, 0, 0.2);
+  /* background-color: #fff; */
+  border-radius: 1.2rem;
+  color: #1864ab;
+  background-image: linear-gradient(to bottom, #fff, #ccc);
+}
+
+.player-name {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.mainplayer-name {
+  font-size: 2.2rem;
+}
+
+.player-score {
+  font-size: 3rem;
+}
+.mainplayer-score {
+  font-size: 2.2rem;
+}
+
+.player-selected-movies-list span {
+  font-size: 3rem;
+}
+.mainplayer-selected-movies-list span {
+  font-size: 2.2rem;
+}
+
+.target-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.target-selector-title {
+  font-size: 1.8rem;
+}
+
+.target-input {
+  width: 15%;
+  font-size: 1.8rem;
+}
+
+.target-display-text {
+  font-size: 2.4rem;
+}
+
+.movie {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-content: center;
+  /* gap: 3rem; */
+  margin-bottom: 2rem;
+  box-shadow: 0 0 1rem 1rem rgb(0, 0, 0, 0.1);
+  padding: 1rem;
+  transition: all 0.3s ease;
+  /* background-image: linear-gradient(to top, #4dabf7, #228be6); */
+  background-image: linear-gradient(to bottom, #fff, #ccc);
+  color: #1864ab;
+  border-radius: 1.2rem;
+}
+
+.movie:hover {
+  transform: scale(1.02);
+  cursor: pointer;
+}
+
+.movie-img {
+  width: 40%;
+}
+
+.movie-title {
+  font-size: 1.8rem;
+}
+.movie-year {
+  font-size: 1.4rem;
+}
+
+.main-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4rem;
+  width: 100vw;
+  padding: 2rem;
+}
+
+.movie-search {
+  width: 50%;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 2rem;
+  /* border: 1px solid #000; */
+  box-shadow: 0 0 2rem 1rem rgb(0, 0, 0, 0.1);
+
+  /* background-color: #fff; */
+  border-radius: 1.2rem;
+  background-image: linear-gradient(to top, #4dabf7, #228be6);
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+}
+
+.movie-list {
+  overflow-y: scroll;
+  padding: 2.2rem;
+}
+
+.movie-search-input {
+  font-size: 2rem;
+  padding: 0.5rem;
+  border-radius: 1.2rem;
+  border: none;
+
+  align-self: center;
+}
+
+.search-icon {
+  height: 3rem;
+  width: 3rem;
+}
+
+.selected-movie-img {
+  width: 30%;
+}
+
+.mainplayer-selected-movies-list div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
