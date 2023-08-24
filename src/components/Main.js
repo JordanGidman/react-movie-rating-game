@@ -7,7 +7,7 @@ function Main({ dispatch, query, movies, players, target, activePlayer }) {
 
   const movieEls = movies.map((movie) => (
     <Movie
-      key={movie.title}
+      key={movie.imdbID}
       movie={movie}
       activePlayer={activePlayer}
       dispatch={dispatch}

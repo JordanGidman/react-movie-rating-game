@@ -4,20 +4,70 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import StartScreen from "./components/StartScreen";
 import { useMovies } from "./useMovies";
-import { act } from "react-dom/test-utils";
 
-const initialState = {
-  players: [],
-  target: 150,
-  ready: false,
-  query: "",
-  activePlayer: "",
-  index: 0,
-};
+const key = `b1bf74f`;
 
 function App() {
-  const [{ players, target, ready, query, activePlayer, index }, dispatch] =
-    useReducer(reducer, initialState);
+  const initialState = {
+    players: [],
+    target: 150,
+    ready: false,
+    query: "",
+    activePlayer: "",
+    index: 0,
+    selectedMovieId: "",
+    moviesAdded: 0,
+  };
+  const [
+    {
+      players,
+      target,
+      ready,
+      query,
+      activePlayer,
+      index,
+      selectedMovieId,
+      moviesAdded,
+    },
+    dispatch,
+  ] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    async function getMovieDetails() {
+      try {
+        // setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${key}&i=${selectedMovieId}`
+        );
+
+        if (!res.ok) throw new Error(`Something Went Wrong Fetching Details`);
+
+        const data = await res.json();
+        if (data.Response === "False")
+          throw new Error("Movie Information Not Found");
+        console.log(data);
+        // setMovie(data);
+        // setIsLoading(false);
+        dispatch({
+          type: "getRating",
+          payload: Math.trunc(Number(data.imdbRating) * 10),
+        });
+      } catch (err) {
+        console.log(err);
+        // setError(err.message);
+      }
+    }
+
+    getMovieDetails();
+  }, [selectedMovieId]);
+
+  useEffect(() => {
+    if (moviesAdded % 3 === 0 && moviesAdded !== 0) {
+      dispatch({
+        type: "changePlayer",
+      });
+    }
+  }, [moviesAdded]);
 
   const { movies, isLoading, error } = useMovies(query);
 
@@ -39,7 +89,7 @@ function App() {
       case "addPlayer":
         return {
           ...state,
-          players: [...state?.players, action.payload],
+          players: [...state.players, action.payload],
         };
 
       case "editQuery":
@@ -54,8 +104,18 @@ function App() {
           target: action.payload,
         };
       case "addMovie":
+        if (
+          state.players
+            .find((player) => player.id === state.activePlayer)
+            .selectedMovies.find(
+              (mov) => mov.imdbID === action.payload.movie.imdbID
+            )
+        )
+          return {
+            ...state,
+          };
         const updatedPlayers = state.players.map((player) => {
-          if (player.id === action.payload.activePlayer) {
+          if (player.id === state.activePlayer) {
             return {
               ...player,
               selectedMovies: [...player.selectedMovies, action.payload.movie],
@@ -66,41 +126,41 @@ function App() {
         return {
           ...state,
           players: updatedPlayers,
+          selectedMovieId: action.payload.movie.imdbID,
+        };
+
+      case "getRating":
+        const updated = state.players?.map((player) => {
+          if (player.id === state.activePlayer) {
+            return {
+              ...player,
+              score: (player.score += action.payload),
+            };
+          }
+          return player;
+        });
+        return {
+          ...state,
+          players: updated,
+          moviesAdded: state.moviesAdded + 1,
+        };
+
+      // case "addRating":
+      //   console.log(state.currRating);
+      //   return {
+      //     ...state,
+      //     currRating: action.payload,
+      //   };
+
+      case "changePlayer":
+        console.log(state.index);
+        return {
+          ...state,
+          index: state.index + 1,
+          activePlayer: state.players[state.index + 1].id,
         };
     }
   }
-
-  // useEffect(() => {
-  //   const { movies, isLoading, error } = useMovies();
-  //   dispatch({
-  //     type: "moviesFetched",
-  //     payload: { movies, isLoading, error },
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   async function getMovieDetails() {
-  //     try {
-  //       setIsLoading(true);
-  //       const res = await fetch(
-  //         `http://www.omdbapi.com/?apikey=${key}&i=${selectedId}`
-  //       );
-
-  //       if (!res.ok) throw new Error(`Something Went Wrong Fetching Details`);
-
-  //       const data = await res.json();
-  //       if (data.Response === "False")
-  //         throw new Error("Movie Information Not Found");
-  //       setMovie(data);
-  //       setIsLoading(false);
-  //     } catch (err) {
-  //       console.log(err);
-  //       setError(err.message);
-  //     }
-  //   }
-
-  //   getMovieDetails();
-  // }, [selectedId]);
 
   return (
     <div className="App">
