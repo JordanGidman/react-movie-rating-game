@@ -28,7 +28,7 @@ body {
 
 .header {
   font-size: 3.6rem;
-  margin-bottom: 6rem;
+  margin-bottom: 3.4rem;
   box-shadow: 0 0 2rem 1rem rgb(0, 0, 0, 0.1);
   padding: 2rem;
   width: 100vw;
@@ -57,11 +57,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  /* justify-content: center; */
   overflow-y: scroll;
   scroll-behavior: smooth;
   border-radius: 1.2rem;
   max-height: 45vh;
+  margin-bottom: 3rem;
+  width: 60vw;
 }
 
 .form-player-list span,
@@ -117,11 +119,7 @@ body {
 }
 
 .player-card {
-  /* display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 2rem; */
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 
@@ -271,7 +269,7 @@ body {
 }
 
 .selected-movie-img {
-  width: 30%;
+  width: 32%;
 }
 
 .mainplayer-selected-movies-list div {
@@ -279,4 +277,62 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+.end-screen {
+  height: 80vh;
+  overflow: hidden;
+}
+.end-poster {
+  position: relative;
+}
+
+.end-screen-movie-rating {
+  font-size: 3rem;
+  font-weight: 700;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: red;
+  /* box-shadow: 0 0 1px 2px rgb(0, 0, 0, 0.5); */
+  backdrop-filter: blur(0.3rem);
+  padding: 0.5rem;
+}
+
+.end-movie-list {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.end-player-list {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  overflow: scroll;
+  margin-bottom: 2rem;
+}
+
+.end-name,
+.end-score {
+  font-size: 2.4rem;
+}
+
+.end-winner {
+  margin-bottom: 3.6rem;
+  font-size: 4.4rem;
+  font-weight: 700;
+}
+.end-title {
+  font-size: 6.2rem;
+  font-weight: 700;
+}
+
+.subheading {
+  font-size: 3.4rem;
+  font-weight: 500;
 }

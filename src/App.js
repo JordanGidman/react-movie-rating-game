@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import StartScreen from "./components/StartScreen";
 import { useMovies } from "./useMovies";
+import EndScreen from "./components/EndScreen";
 
 const key = `b1bf74f`;
 
@@ -18,6 +19,7 @@ function App() {
     selectedMovieId: "",
     moviesAdded: 0,
   };
+
   const [
     {
       players,
@@ -31,6 +33,16 @@ function App() {
     },
     dispatch,
   ] = useReducer(reducer, initialState);
+
+  const gameWon = moviesAdded === players?.length * 3 && moviesAdded !== 0;
+
+  // useEffect(() => {
+  //   if (gameWon) {
+  //     dispatch({
+  //       type: "gameWon",
+  //     });
+  //   }
+  // }, [gameWon]);
 
   useEffect(() => {
     async function getMovieDetails() {
@@ -48,6 +60,7 @@ function App() {
         console.log(data);
         // setMovie(data);
         // setIsLoading(false);
+
         dispatch({
           type: "getRating",
           payload: Math.trunc(Number(data.imdbRating) * 10),
@@ -62,7 +75,12 @@ function App() {
   }, [selectedMovieId]);
 
   useEffect(() => {
-    if (moviesAdded % 3 === 0 && moviesAdded !== 0) {
+    const pos = players.length - 1;
+    if (
+      moviesAdded % 3 === 0 &&
+      moviesAdded !== 0 &&
+      activePlayer !== players[pos].id
+    ) {
       dispatch({
         type: "changePlayer",
       });
@@ -134,7 +152,7 @@ function App() {
           if (player.id === state.activePlayer) {
             return {
               ...player,
-              score: (player.score += action.payload),
+              score: [...player.score, +action.payload],
             };
           }
           return player;
@@ -158,15 +176,31 @@ function App() {
           ...state,
           index: state.index + 1,
           activePlayer: state.players[state.index + 1].id,
+          selectedMovieId: "",
         };
+
+      case "reset":
+        return {
+          ...initialState,
+        };
+
+      // case "playAgain":
+      // return {
+
+      // }
+
+      default:
+        throw new Error(`Action not recognised`);
     }
   }
 
   return (
     <div className="App">
       <Header />
-      {!ready && <StartScreen players={players} dispatch={dispatch} />}
-      {ready && (
+      {!ready && !gameWon && (
+        <StartScreen players={players} dispatch={dispatch} />
+      )}
+      {ready && !gameWon && (
         <Main
           dispatch={dispatch}
           query={query}
@@ -175,6 +209,9 @@ function App() {
           target={target}
           activePlayer={activePlayer}
         />
+      )}
+      {gameWon && (
+        <EndScreen players={players} target={target} dispatch={dispatch} />
       )}
     </div>
   );

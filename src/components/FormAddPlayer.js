@@ -9,17 +9,18 @@ function FormAddPlayer({ players, dispatch }) {
     setInput(e.target.value);
   }
 
-  function handleSubmit() {
+  function handleStart() {
     dispatch({
       type: "start",
     });
   }
 
   function handleAddPlayer(e) {
+    e.preventDefault();
     const newPlayer = {
       id: crypto.randomUUID(),
       name: input,
-      score: 0,
+      score: [],
       selectedMovies: [],
       totalRatingScore: 0,
     };
@@ -31,31 +32,33 @@ function FormAddPlayer({ players, dispatch }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="form-add-player">
-      <h2 className="add-player-heading">Please Enter Player Names:</h2>
-      <input
-        type="text"
-        value={input}
-        onChange={handleInput}
-        className="add-player-input"
-        placeholder="Enter a name"
-      />
-      <button
-        type="button"
-        onClick={handleAddPlayer}
-        className="btn-add-player"
-      >
-        Add
-      </button>
-      <PlayerList
-        players={players}
-        elsClassName={""}
-        listClassName={"form-player-list-start"}
-      />
-      <button type="submit" className="btn-start">
+    <>
+      <form onSubmit={handleAddPlayer} className="form-add-player">
+        <h2 className="add-player-heading">Please Enter Player Names:</h2>
+        <input
+          type="text"
+          value={input}
+          onChange={handleInput}
+          className="add-player-input"
+          placeholder="Enter a name"
+        />
+        <button
+          type="button"
+          onClick={handleAddPlayer}
+          className="btn-add-player"
+        >
+          Add
+        </button>
+        <PlayerList
+          players={players}
+          elsClassName={""}
+          listClassName={"form-player-list-start"}
+        />
+      </form>
+      <button className="btn-start" onClick={handleStart}>
         Start
       </button>
-    </form>
+    </>
   );
 }
 
