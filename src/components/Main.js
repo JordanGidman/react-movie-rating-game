@@ -1,10 +1,20 @@
 import Movie from "./Movie";
 import PlayerList from "./PlayerList";
 import TargetSelector from "./TargetSelector";
+import Loader from "./Loader";
+import ErrorMessage from "./ErrorMessage";
 
-function Main({ dispatch, query, movies, players, target, activePlayer }) {
-  console.log(movies);
-
+function Main({
+  dispatch,
+  query,
+  movies,
+  players,
+  target,
+  activePlayer,
+  isLoading,
+  error,
+  ready,
+}) {
   const movieEls = movies.map((movie) => (
     <Movie
       key={movie.imdbID}
@@ -23,6 +33,9 @@ function Main({ dispatch, query, movies, players, target, activePlayer }) {
           players={players}
           elsClassName={"main"}
           listClassName={"form-player-list"}
+          activePlayer={activePlayer}
+          dispatch={dispatch}
+          ready={ready}
         />
         <div className="movie-search">
           <div className="search-bar">
@@ -54,7 +67,9 @@ function Main({ dispatch, query, movies, players, target, activePlayer }) {
               }
             />
           </div>
-          <div className="movie-list">{movieEls}</div>
+          {isLoading && <Loader />}
+          {!isLoading && !error && <div className="movie-list">{movieEls}</div>}
+          {error && <ErrorMessage message={error.message} />}
         </div>
       </div>
     </main>

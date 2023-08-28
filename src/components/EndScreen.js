@@ -2,7 +2,6 @@ import Player from "./Player";
 
 function EndScreen({ players, target, dispatch }) {
   const sortedPlayers = players.slice().sort((a, b) => {
-    console.log(a);
     if (
       Math.abs(
         target -
@@ -21,8 +20,6 @@ function EndScreen({ players, target, dispatch }) {
     else return -1;
   });
 
-  console.log(sortedPlayers);
-
   const playerEls = sortedPlayers.map((player) => (
     <Player key={player.id} player={player} gameOver={true} />
   ));
@@ -34,16 +31,29 @@ function EndScreen({ players, target, dispatch }) {
       <div className="end-player-list">
         <div>{playerEls}</div>
       </div>
-      <button
-        className="reset-btn"
-        onClick={() =>
-          dispatch({
-            type: "reset",
-          })
-        }
-      >
-        Reset
-      </button>
+      <div className="end-btns">
+        <button
+          className="btn-reset"
+          onClick={() =>
+            dispatch({
+              type: "reset",
+            })
+          }
+        >
+          Reset
+        </button>
+
+        <button
+          className="btn-reset"
+          onClick={() =>
+            dispatch({
+              type: "playAgain",
+            })
+          }
+        >
+          Play Again
+        </button>
+      </div>
     </div>
   );
 }

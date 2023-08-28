@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Main from "./components/Main";
@@ -27,7 +27,6 @@ function App() {
       ready,
       query,
       activePlayer,
-      index,
       selectedMovieId,
       moviesAdded,
     },
@@ -49,7 +48,7 @@ function App() {
       try {
         // setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${key}&i=${selectedMovieId}`
+          `https://www.omdbapi.com/?apikey=${key}&i=${selectedMovieId}`
         );
 
         if (!res.ok) throw new Error(`Something Went Wrong Fetching Details`);
@@ -57,7 +56,7 @@ function App() {
         const data = await res.json();
         if (data.Response === "False")
           throw new Error("Movie Information Not Found");
-        console.log(data);
+
         // setMovie(data);
         // setIsLoading(false);
 
@@ -79,13 +78,15 @@ function App() {
     if (
       moviesAdded % 3 === 0 &&
       moviesAdded !== 0 &&
-      activePlayer !== players[pos].id
+      activePlayer !== players[pos].id &&
+      players.find((player) => player.id === activePlayer).selectedMovies
+        .length === 3
     ) {
       dispatch({
         type: "changePlayer",
       });
     }
-  }, [moviesAdded]);
+  }, [moviesAdded, activePlayer, players]);
 
   const { movies, isLoading, error } = useMovies(query);
 
@@ -170,8 +171,18 @@ function App() {
       //     currRating: action.payload,
       //   };
 
+      case "choosePlayer":
+        const foundIndex = state.players.findIndex(
+          (player) => player.id === action.payload
+        );
+        return {
+          ...state,
+          activePlayer: action.payload,
+          selectedMovieId: "",
+          index: foundIndex,
+        };
+
       case "changePlayer":
-        console.log(state.index);
         return {
           ...state,
           index: state.index + 1,
@@ -184,10 +195,18 @@ function App() {
           ...initialState,
         };
 
-      // case "playAgain":
-      // return {
-
-      // }
+      case "playAgain":
+        const resetPlayers = state.players.map((player) => {
+          return {
+            ...player,
+            score: [],
+            selectedMovies: [],
+          };
+        });
+        return {
+          ...initialState,
+          players: resetPlayers,
+        };
 
       default:
         throw new Error(`Action not recognised`);
@@ -208,6 +227,9 @@ function App() {
           players={players}
           target={target}
           activePlayer={activePlayer}
+          isLoading={isLoading}
+          error={error}
+          ready={ready}
         />
       )}
       {gameWon && (

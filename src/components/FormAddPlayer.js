@@ -1,9 +1,22 @@
 import { useState } from "react";
-import Player from "./Player";
 import PlayerList from "./PlayerList";
+import { useKey } from "../useKey";
+import { useRef } from "react";
 
 function FormAddPlayer({ players, dispatch }) {
   const [input, setInput] = useState("");
+
+  const inputEl = useRef(null);
+
+  function selectCurrentEl() {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setInput("");
+  }
+
+  useKey("Enter", function () {
+    selectCurrentEl();
+  });
 
   function handleInput(e) {
     setInput(e.target.value);
@@ -25,22 +38,27 @@ function FormAddPlayer({ players, dispatch }) {
       totalRatingScore: 0,
     };
 
-    dispatch({
-      type: "addPlayer",
-      payload: newPlayer,
-    });
+    if (newPlayer.name !== "")
+      dispatch({
+        type: "addPlayer",
+        payload: newPlayer,
+      });
+
+    setInput("");
+    selectCurrentEl();
   }
 
   return (
     <>
       <form onSubmit={handleAddPlayer} className="form-add-player">
-        <h2 className="add-player-heading">Please Enter Player Names:</h2>
+        <h2 className="add-player-heading">Please enter player names:</h2>
         <input
           type="text"
           value={input}
           onChange={handleInput}
           className="add-player-input"
           placeholder="Enter a name"
+          ref={inputEl}
         />
         <button
           type="button"

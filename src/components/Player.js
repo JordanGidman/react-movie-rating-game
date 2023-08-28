@@ -1,11 +1,19 @@
-function Player({ player, elsClassName, gameOver = false }) {
+function Player({
+  player,
+  elsClassName,
+  gameOver = false,
+  activePlayer,
+  dispatch,
+  ready,
+}) {
   const selectedMovieEls = player.selectedMovies.map((movie, i) =>
     gameOver ? (
-      <div className="end-poster">
+      <div className="end-poster" key={movie.imdbID}>
         <img
           key={movie.imdbID}
           src={movie.Poster}
           className={`selected-movie-img ${gameOver && "end-screen-poster"}`}
+          alt={`poster for ${movie.name}`}
         ></img>
         {gameOver && (
           <p className="end-screen-movie-rating">{player.score[i]}</p>
@@ -16,12 +24,22 @@ function Player({ player, elsClassName, gameOver = false }) {
         key={movie.imdbID}
         src={movie.Poster}
         className={`selected-movie-img ${gameOver && "end-screen-poster"}`}
+        alt={`poster for ${movie.name}`}
       ></img>
     )
   );
 
   return (
-    <div className="player-card">
+    <div
+      className={`player-card ${activePlayer === player.id ? "active" : ""}`}
+      onClick={() => {
+        ready &&
+          dispatch({
+            type: "choosePlayer",
+            payload: player.id,
+          });
+      }}
+    >
       <h3 className={`${elsClassName}player-name ${gameOver && "end-name"}`}>
         {player.name}
       </h3>
